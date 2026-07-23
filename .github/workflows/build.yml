@@ -1,0 +1,21 @@
+name: Build APK
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install deps
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip openjdk-17-jdk git autoconf libtool pkg-config
+          pip3 install buildozer
+      - name: Build
+        run: |
+          cd simulator_app
+          buildozer android debug
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: customsim-apk
+          path: simulator_app/bin/*.apk
